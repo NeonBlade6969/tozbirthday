@@ -1,781 +1,799 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy 16th Birthday Toz! 🎈 3rd November</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy 16th Birthday Toz! 🎂</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-  <!-- Canvas Confetti CDN -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;800;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            fredoka: ['Fredoka', 'sans-serif'],
-            quicksand: ['Quicksand', 'sans-serif'],
-            handwriting: ['Caveat', 'cursive']
-          },
-          colors: {
-            warm: {
-              cream: '#FFFDF9',
-              vanilla: '#FAF4EC',
-              peach: '#FFE8DE',
-              rose: '#FF7E8B',
-              coral: '#FF6B6B',
-              mint: '#E2F4EC',
-              sky: '#E5F3FE',
-              butter: '#FEF3C7',
-              cocoa: '#4A3E3D'
-            }
-          }
-        }
-      }
-    }
-  </script>
-
+  
   <style>
+    :root {
+      --bg: #FFF7ED;
+      --card-bg: #FFFFFF;
+      --envelope-base: #FCEFD8;
+      --envelope-flap: #F5DFB8;
+      --envelope-dark: #E6CE9F;
+      --accent: #FF6B8B;
+      --accent-soft: #FFE3E8;
+      --primary: #59352A;
+      --muted: #8F7265;
+      --border-color: #EED7C5;
+      --shadow: 0 16px 36px -12px rgba(93, 56, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
-      background-color: #FAF4EC;
-      background-image: 
-        radial-gradient(#F0E5D8 1.5px, transparent 1.5px),
-        radial-gradient(#F0E5D8 1.5px, #FAF4EC 1.5px);
-      background-size: 30px 30px;
-      background-position: 0 0, 15px 15px;
-      color: #4A3E3D;
-      font-family: 'Quicksand', sans-serif;
+      background-color: var(--bg);
+      background-image: radial-gradient(#F5DFC9 1.5px, transparent 1.5px);
+      background-size: 26px 26px;
+      font-family: 'Nunito', sans-serif;
+      color: var(--primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    /* 3D Perspective for realistic envelope */
-    .envelope-perspective {
-      perspective: 1200px;
+    /* Floating Ambient Balloons */
+    .balloon-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
     }
 
-    /* Flap 3D rotation */
-    .envelope-flap {
-      transform-origin: top center;
-      transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s ease;
-      z-index: 25;
-    }
-
-    .envelope-open .envelope-flap {
-      transform: rotateX(180deg);
-      z-index: 5;
-    }
-
-    /* Sliding card letter animation */
-    .letter-paper {
-      transition: transform 0.85s cubic-bezier(0.34, 1.25, 0.64, 1), opacity 0.5s ease;
-      transform: translateY(0) scale(0.96);
-      z-index: 10;
-    }
-
-    .envelope-open .letter-paper {
-      transform: translateY(-290px) scale(1);
-      z-index: 30;
-    }
-
-    @media (min-width: 640px) {
-      .envelope-open .letter-paper {
-        transform: translateY(-330px) scale(1);
-      }
-    }
-
-    /* Candle flame flicker */
-    @keyframes warmFlicker {
-      0%, 100% { transform: scale(1) rotate(-1deg); }
-      30% { transform: scale(1.1, 1.15) rotate(2deg); }
-      70% { transform: scale(0.92, 0.96) rotate(-2deg); }
-    }
-
-    .candle-flame {
-      animation: warmFlicker 0.65s infinite ease-in-out;
-      transform-origin: center bottom;
-      filter: drop-shadow(0 0 6px #FBBF24);
-    }
-
-    /* Floating balloons */
-    @keyframes floatUp {
-      0% { transform: translateY(105vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.95; }
-      90% { opacity: 0.95; }
-      100% { transform: translateY(-25vh) rotate(16deg); opacity: 0; }
-    }
-
-    .floating-balloon {
+    .balloon {
       position: absolute;
-      animation: floatUp linear infinite;
-      cursor: pointer;
-      user-select: none;
-      transition: transform 0.15s ease-out;
-    }
-    .floating-balloon:hover {
-      transform: scale(1.15);
+      width: 44px;
+      height: 56px;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      opacity: 0.75;
+      animation: floatUp 14s infinite linear;
+      bottom: -70px;
     }
 
-    /* Smoke puff animation */
-    @keyframes smokeFade {
-      0% { opacity: 0.8; transform: translateY(0) scale(0.6); }
-      100% { opacity: 0; transform: translateY(-35px) scale(2); filter: blur(3px); }
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 12px;
+      background: #C4A482;
     }
-    .smoke-puff {
-      animation: smokeFade 1.2s forwards ease-out;
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.85; }
+      90% { opacity: 0.85; }
+      100% { transform: translateY(-115vh) rotate(15deg); opacity: 0; }
+    }
+
+    /* Card & Envelope Container */
+    .scene-wrap {
+      width: 100%;
+      max-width: 580px;
+      position: relative;
+      z-index: 10;
+      perspective: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ================= CLOSED ENVELOPE ================= */
+    .envelope-box {
+      width: 100%;
+      max-width: 440px;
+      height: 300px;
+      background: var(--envelope-base);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(89, 53, 42, 0.16);
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid var(--envelope-dark);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+
+    .envelope-box:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 24px 44px rgba(89, 53, 42, 0.2);
+    }
+
+    .env-top-tri {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 217px solid transparent;
+      border-right: 217px solid transparent;
+      border-top: 155px solid var(--envelope-flap);
+      z-index: 4;
+      transform-origin: top center;
+      transition: transform 0.6s ease;
+    }
+
+    .env-bot-tri {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 217px solid transparent;
+      border-right: 217px solid transparent;
+      border-bottom: 140px solid var(--envelope-base);
+      z-index: 3;
+    }
+
+    .env-side-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-top: 150px solid transparent;
+      border-bottom: 150px solid transparent;
+      border-left: 170px solid var(--envelope-dark);
+      opacity: 0.35;
+      z-index: 2;
+    }
+
+    .env-side-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-top: 150px solid transparent;
+      border-bottom: 150px solid transparent;
+      border-right: 170px solid var(--envelope-dark);
+      opacity: 0.35;
+      z-index: 2;
+    }
+
+    .heart-seal {
+      position: absolute;
+      top: 125px;
+      z-index: 6;
+      width: 60px;
+      height: 60px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 6px 16px rgba(255, 107, 139, 0.45);
+      border: 3px solid #FFF;
+      cursor: pointer;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .heart-seal span {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .heart-seal small {
+      font-size: 8px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .airmail-badge {
+      position: absolute;
+      bottom: 30px;
+      z-index: 5;
+      background: #FFFFFF;
+      padding: 10px 22px;
+      border-radius: 30px;
+      border: 2px dashed #E3BFA5;
+      text-align: center;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+    }
+
+    .airmail-badge .tag {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .airmail-badge .to {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .open-prompt {
+      margin-top: 18px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    /* ================= OPEN CARD ================= */
+    .card-wrap {
+      display: none;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: 28px;
+      border: 2px solid var(--border-color);
+      box-shadow: var(--shadow);
+      padding: 32px 28px;
+      animation: popIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      position: relative;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .date-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .card-title span {
+      color: var(--accent);
+    }
+
+    .birthday-quote {
+      font-family: 'Caveat', cursive;
+      font-size: 23px;
+      color: #9E5A47;
+      text-align: center;
+      margin: 4px 0 20px;
+    }
+
+    /* Mini Cake Interaction */
+    .cake-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #FFF9F3;
+      border: 1.5px dashed #F0D5C3;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .cake-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 8px;
+    }
+
+    .candle-group {
+      display: flex;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .candle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+
+    .flame {
+      width: 14px;
+      height: 22px;
+      background: radial-gradient(#FFF07C 30%, #FF9900 70%, transparent 95%);
+      border-radius: 50% 50% 35% 35%;
+      box-shadow: 0 0 14px #FFB300;
+      animation: flicker 0.8s infinite alternate;
+      transition: all 0.3s ease;
+    }
+
+    .flame.blown {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.2);
+    }
+
+    @keyframes flicker {
+      0% { transform: rotate(-2deg) scale(1); }
+      100% { transform: rotate(3deg) scale(1.08); }
+    }
+
+    .candle-stick {
+      width: 12px;
+      height: 38px;
+      border-radius: 4px;
+      background: repeating-linear-gradient(45deg, #FF9FB2, #FF9FB2 6px, #FFF 6px, #FFF 12px);
+      box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .cake-base {
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .cake-status {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .cake-status:hover {
+      color: var(--accent);
+    }
+
+    /* Friend Message Tabs */
+    .tabs-label {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .tabs-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      scrollbar-width: none;
+    }
+
+    .tabs-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: #F8EFE6;
+      border: 1.5px solid transparent;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      background: #F1E4D6;
+    }
+
+    .tab-btn.active {
+      background: #FFFFFF;
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 4px 12px rgba(255, 107, 139, 0.16);
+    }
+
+    .tab-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #F1D4CA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      overflow: hidden;
+    }
+
+    .tab-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Wish Display Box */
+    .wish-box {
+      background: #FFFDF9;
+      border: 1.5px solid #F1E2D4;
+      border-radius: 20px;
+      padding: 22px;
+      position: relative;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 14px rgba(93, 56, 42, 0.04);
+    }
+
+    .wish-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .big-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      overflow: hidden;
+      background: #F7E4DE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .big-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .wish-meta h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .wish-meta span {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .wish-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #634335;
+      position: relative;
+    }
+
+    /* Actions bottom */
+    .card-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .reclose-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .reclose-btn:hover {
+      background: #F8ECE0;
+      color: var(--primary);
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-rose-200 selection:text-rose-900 relative overflow-x-hidden">
+<body>
 
-  <!-- Floating Balloons Layer -->
-  <div id="balloon-container" class="fixed inset-0 pointer-events-none z-10 overflow-hidden"></div>
+  <!-- Floating background balloons -->
+  <div class="balloon-layer" id="balloonLayer"></div>
 
-  <!-- Header Section -->
-  <header class="relative z-40 w-full px-5 py-4 max-w-4xl mx-auto flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-11 h-11 bg-warm-peach border-2 border-warm-rose/30 rounded-2xl flex items-center justify-center text-warm-rose text-xl shadow-sm">
-        💌
-      </div>
-      <div>
-        <h1 class="font-fredoka text-xl sm:text-2xl font-bold text-warm-cocoa leading-tight flex items-center gap-2">
-          Toz's 16th Birthday <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-0.5 rounded-full font-quicksand font-bold border border-amber-200">Sweet 16!</span>
-        </h1>
-        <p class="text-xs sm:text-sm text-gray-500 font-medium">November 3rd • Special Letter & Wishes</p>
-      </div>
-    </div>
+  <div class="scene-wrap">
 
-    <!-- Quick action buttons -->
-    <div class="flex items-center gap-2">
-      <button onclick="toggleAudio()" id="soundBtn" class="px-3 py-1.5 bg-white border border-warm-cocoa/10 hover:border-warm-cocoa/30 rounded-xl text-xs font-semibold text-warm-cocoa shadow-sm flex items-center gap-1.5 transition active:scale-95">
-        <i id="soundIcon" class="fas fa-volume-up text-amber-500"></i>
-        <span class="hidden sm:inline">Chimes: On</span>
-      </button>
-      <button onclick="triggerConfetti()" class="px-3.5 py-1.5 bg-warm-coral hover:bg-rose-500 text-white rounded-xl text-xs font-bold shadow-sm shadow-warm-coral/30 flex items-center gap-1.5 transition active:scale-95">
-        <i class="fas fa-gift"></i> Confetti!
-      </button>
-    </div>
-  </header>
+    <!-- CLOSED ENVELOPE VIEW -->
+    <div class="envelope-box" id="envelopeBox" onclick="openEnvelope()">
+      <div class="env-top-tri" id="envelopeFlap"></div>
+      <div class="env-side-left"></div>
+      <div class="env-side-right"></div>
+      <div class="env-bot-tri"></div>
 
-  <!-- Main Envelope & Letter Arena -->
-  <main class="relative z-30 flex-1 flex flex-col items-center justify-start sm:justify-center px-4 pt-4 pb-16 max-w-4xl mx-auto w-full">
-
-    <!-- Playful Banner Instruction -->
-    <div class="text-center mb-6">
-      <span class="inline-block px-4 py-1 rounded-full bg-white border border-warm-peach text-xs font-bold text-warm-coral shadow-sm mb-2">
-        📅 3RD NOVEMBER • OFFICIAL BIRTHDAY LETTER
-      </span>
-      <h2 class="font-fredoka text-2xl sm:text-4xl text-warm-cocoa font-bold">
-        A Special Delivery for <span class="text-warm-coral underline decoration-wavy decoration-amber-300 decoration-2">Toz</span>! 🎈
-      </h2>
-      <p id="instructionHint" class="text-xs sm:text-sm text-gray-500 mt-1">
-        Tap the stamp or envelope below to open your 16th birthday card!
-      </p>
-    </div>
-
-    <!-- 3D Envelope Container -->
-    <div class="envelope-perspective relative w-full max-w-[350px] sm:max-w-[480px] h-[320px] sm:h-[350px] mx-auto my-4">
-
-      <div id="envelopeWrapper" class="relative w-full h-full cursor-pointer select-none">
-        
-        <!-- ================= THE SLIDING LETTER PAPER ================= -->
-        <div id="letterPaper" class="letter-paper absolute left-3 right-3 sm:left-4 sm:right-4 top-2 bg-white rounded-2xl shadow-xl border border-warm-cocoa/10 p-5 sm:p-6 text-warm-cocoa flex flex-col justify-between">
-          
-          <!-- Little Top Card Bar -->
-          <div class="flex items-center justify-between border-b border-warm-peach pb-3">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">🎂</span>
-              <div>
-                <span class="font-fredoka text-sm font-bold text-warm-cocoa block">Happy 16th Birthday Toz!</span>
-                <span class="text-[11px] text-gray-400 font-medium">From all of your friends • Nov 3</span>
-              </div>
-            </div>
-            <div class="bg-amber-50 text-amber-800 text-[11px] font-bold px-2 py-0.5 rounded-lg border border-amber-200">
-              #SweetSixteen
-            </div>
-          </div>
-
-          <!-- Sweet Birthday Note -->
-          <div class="my-3 text-center px-2">
-            <p class="font-handwriting text-2xl sm:text-3xl text-warm-coral font-bold leading-tight">
-              "Turning sixteen is just the start of something amazing!"
-            </p>
-            <p class="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">
-              Happy 16th Birthday, Toz! Wishing you a year full of awesome laughs, big victories, great music, and unforgettable adventures. Here's what everyone wanted to say to you today:
-            </p>
-          </div>
-
-          <!-- FRIEND MESSAGE TABS (Cas, Sweet, Tsumiki, Ren, Alex) -->
-          <div class="bg-warm-vanilla rounded-xl p-3 border border-warm-peach/80 shadow-inner">
-            
-            <!-- Friend Tabs Selector -->
-            <div class="flex items-center justify-between gap-1 overflow-x-auto pb-2 border-b border-warm-cocoa/10" id="tabsBar">
-              <button onclick="selectTab('cas')" id="tab-btn-cas" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 bg-white shadow-sm text-warm-coral border border-warm-coral/30">
-                <span>🧢</span> Cas
-              </button>
-              <button onclick="selectTab('sweet')" id="tab-btn-sweet" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 text-gray-600 hover:text-warm-cocoa">
-                <span>🧁</span> Sweet
-              </button>
-              <button onclick="selectTab('tsumiki')" id="tab-btn-tsumiki" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 text-gray-600 hover:text-warm-cocoa">
-                <span>🌸</span> Tsumiki
-              </button>
-              <button onclick="selectTab('ren')" id="tab-btn-ren" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 text-gray-600 hover:text-warm-cocoa">
-                <span>⚡</span> Ren
-              </button>
-              <button onclick="selectTab('alex')" id="tab-btn-alex" class="tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 text-gray-600 hover:text-warm-cocoa">
-                <span>🎮</span> Alex
-              </button>
-            </div>
-
-            <!-- Tab Contents -->
-            <div class="pt-3 min-h-[95px] flex items-center">
-              
-              <!-- Tab: Cas -->
-              <div id="tab-cas" class="tab-content w-full flex items-start gap-3">
-                <div class="w-10 h-10 rounded-full bg-blue-100 border border-blue-300 flex items-center justify-center text-xl shrink-0">
-                  🧢
-                </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-fredoka text-xs font-bold text-warm-cocoa">Cas</span>
-                    <span class="text-[10px] text-gray-400">@cas • Best Wishes</span>
-                  </div>
-                  <p class="text-xs text-gray-600 mt-1 leading-snug">
-                    "Happy 16th Toz! Still can’t believe you’re 16 already man. Never stop being the funniest person in the room! Today's all yours, celebrate big time bro!"
-                  </p>
-                </div>
-              </div>
-
-              <!-- Tab: Sweet -->
-              <div id="tab-sweet" class="tab-content hidden w-full flex items-start gap-3">
-                <div class="w-10 h-10 rounded-full bg-pink-100 border border-pink-300 flex items-center justify-center text-xl shrink-0">
-                  🧁
-                </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-fredoka text-xs font-bold text-warm-cocoa">Sweet</span>
-                    <span class="text-[10px] text-gray-400">@sweet • Birthday Hugs</span>
-                  </div>
-                  <p class="text-xs text-gray-600 mt-1 leading-snug">
-                    "TOZZZ Happy 16th!! 🎂✨ Hope your day is as sweet and radiant as ever. Eat lots of cake, take tons of photos, and make 16 the happiest year yet!"
-                  </p>
-                </div>
-              </div>
-
-              <!-- Tab: Tsumiki -->
-              <div id="tab-tsumiki" class="tab-content hidden w-full flex items-start gap-3">
-                <div class="w-10 h-10 rounded-full bg-purple-100 border border-purple-300 flex items-center justify-center text-xl shrink-0">
-                  🌸
-                </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-fredoka text-xs font-bold text-warm-cocoa">Tsumiki</span>
-                    <span class="text-[10px] text-gray-400">@tsumiki • Warm Cheers</span>
-                  </div>
-                  <p class="text-xs text-gray-600 mt-1 leading-snug">
-                    "Happy 16th Birthday Toz! 🎉 Wishing you endless joy, bright stars on your path, and peace of mind. We're all super lucky to have you around! Stay wonderful!"
-                  </p>
-                </div>
-              </div>
-
-              <!-- Tab: Ren -->
-              <div id="tab-ren" class="tab-content hidden w-full flex items-start gap-3">
-                <div class="w-10 h-10 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-xl shrink-0">
-                  ⚡
-                </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-fredoka text-xs font-bold text-warm-cocoa">Ren</span>
-                    <span class="text-[10px] text-gray-400">@ren • High Energy</span>
-                  </div>
-                  <p class="text-xs text-gray-600 mt-1 leading-snug">
-                    "Yo Toz, Happy Sweet 16! 🏎️💨 The milestone level is finally unlocked! Keep chasing your dreams at 100mph. Can't wait to hang out and celebrate!"
-                  </p>
-                </div>
-              </div>
-
-              <!-- Tab: Alex -->
-              <div id="tab-alex" class="tab-content hidden w-full flex items-start gap-3">
-                <div class="w-10 h-10 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-xl shrink-0">
-                  🎮
-                </div>
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-fredoka text-xs font-bold text-warm-cocoa">Alex</span>
-                    <span class="text-[10px] text-gray-400">@alex • GG Toz</span>
-                  </div>
-                  <p class="text-xs text-gray-600 mt-1 leading-snug">
-                    "Level 16 reached! Happy birthday Toz! 🏆 Hope your year brings tons of wins, great luck, and unforgettable memories. Let's get some birthday matches soon!"
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- Cute Birthday Cake & 16 Candles -->
-          <div class="mt-4 pt-2 border-t border-warm-peach flex items-center justify-between">
-            
-            <!-- Cake Graphic -->
-            <div class="flex items-center gap-3">
-              <!-- Mini Cake with Candles -->
-              <div class="relative flex flex-col items-center">
-                <!-- Candles with Flames -->
-                <div class="flex items-end gap-3 mb-0.5">
-                  <!-- Candle 1 -->
-                  <div class="flex flex-col items-center">
-                    <div id="flame-1" class="candle-flame w-2.5 h-4 bg-gradient-to-t from-orange-400 via-amber-300 to-yellow-100 rounded-full cursor-pointer" onclick="blowCandles(event)"></div>
-                    <div id="smoke-1" class="hidden text-[10px] text-gray-400 absolute -top-4 smoke-puff"><i class="fas fa-cloud"></i></div>
-                    <div class="w-2.5 h-5 bg-gradient-to-b from-rose-300 to-rose-400 rounded-t-sm shadow-xs border border-rose-200"></div>
-                  </div>
-                  <!-- Candle 6 -->
-                  <div class="flex flex-col items-center">
-                    <div id="flame-2" class="candle-flame w-2.5 h-4 bg-gradient-to-t from-orange-400 via-amber-300 to-yellow-100 rounded-full cursor-pointer" onclick="blowCandles(event)"></div>
-                    <div id="smoke-2" class="hidden text-[10px] text-gray-400 absolute -top-4 smoke-puff"><i class="fas fa-cloud"></i></div>
-                    <div class="w-2.5 h-5 bg-gradient-to-b from-sky-300 to-sky-400 rounded-t-sm shadow-xs border border-sky-200"></div>
-                  </div>
-                </div>
-
-                <!-- Cake layers -->
-                <div class="w-16 h-3 bg-warm-cream rounded-t-sm border border-amber-200 flex items-center justify-around px-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
-                </div>
-                <div class="w-20 h-4 bg-gradient-to-r from-warm-peach via-pink-200 to-warm-peach rounded-b-md border border-pink-300 shadow-sm flex items-center justify-center text-[8px] font-bold text-warm-cocoa tracking-wider">
-                  TOZ • 16
-                </div>
-              </div>
-
-              <div>
-                <span id="candleStatus" class="font-fredoka text-xs font-semibold text-warm-coral block">Make a 16th Wish!</span>
-                <span class="text-[10px] text-gray-500">Tap the candles to blow them out</span>
-              </div>
-            </div>
-
-            <!-- Candle Action Button -->
-            <button id="cakeActionBtn" onclick="blowCandles(event)" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 transition active:scale-95 flex items-center gap-1.5">
-              <span>💨</span> Blow Out
-            </button>
-          </div>
-
-        </div>
-
-        <!-- ================= THE ENVELOPE BASE ================= -->
-        <!-- Envelope Back Wall -->
-        <div class="absolute inset-0 w-full h-full bg-[#E5D7C5] rounded-3xl shadow-lg border border-[#D4C3AE] z-0"></div>
-
-        <!-- Envelope Folded Flap (Top Triangular Flap) -->
-        <div id="envelopeFlap" class="envelope-flap absolute top-0 left-0 right-0 h-[160px] sm:h-[180px] bg-gradient-to-b from-[#F2E5D4] to-[#E5D5C1] rounded-t-3xl border-t border-x border-[#D4C3AE] shadow-md flex items-center justify-center" style="clip-path: polygon(0% 0%, 100% 0%, 50% 100%);">
-          
-          <!-- Cute Stamp / Seal -->
-          <div id="envelopeSeal" class="absolute bottom-6 w-14 h-14 bg-gradient-to-tr from-warm-coral to-rose-400 rounded-full shadow-lg border-2 border-white flex flex-col items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform">
-            <i class="fas fa-heart text-white text-base"></i>
-            <span class="text-[8px] font-fredoka font-bold tracking-tighter">TOZ 16</span>
-          </div>
-
-        </div>
-
-        <!-- Envelope Front Pocket (Lower Triangular Cover that conceals letter until opened) -->
-        <div class="absolute bottom-0 left-0 right-0 h-[210px] sm:h-[230px] bg-[#EFE3D3] rounded-b-3xl border-b border-x border-[#D8C9B5] shadow-inner z-20 pointer-events-none flex flex-col justify-end p-5" style="clip-path: polygon(0% 45%, 50% 0%, 100% 45%, 100% 100%, 0% 100%);">
-          <!-- Postal Label on Front -->
-          <div class="self-center bg-white/90 border border-warm-cocoa/20 px-4 py-1.5 rounded-xl text-center shadow-xs mb-3 rotate-[-1deg]">
-            <span class="text-[10px] uppercase font-bold text-gray-500 tracking-wider block">Special Airmail</span>
-            <span class="font-fredoka text-xs sm:text-sm font-bold text-warm-cocoa">For Toz on his 16th 💌</span>
-          </div>
-        </div>
-
+      <div class="heart-seal">
+        <span>💌</span>
+        <small>OPEN</small>
       </div>
 
+      <div class="airmail-badge">
+        <div class="tag">Special Delivery</div>
+        <div class="to">For Toz on her 16th 🎀</div>
+      </div>
+    </div>
+    
+    <div class="open-prompt" id="openPrompt">
+      <span>✨ Tap the envelope to unseal</span>
     </div>
 
-    <!-- Controls Below Envelope -->
-    <div class="flex flex-wrap items-center justify-center gap-3 mt-4 z-40">
-      <button id="toggleOpenBtn" onclick="toggleEnvelope()" class="px-5 py-2.5 rounded-2xl bg-warm-coral hover:bg-rose-500 text-white font-fredoka font-bold text-sm shadow-md shadow-warm-coral/25 transition active:scale-95 flex items-center gap-2">
-        <i id="openBtnIcon" class="fas fa-envelope-open"></i>
-        <span id="openBtnText">Open Birthday Card</span>
-      </button>
+    <!-- OPENED CARD VIEW -->
+    <div class="card-wrap" id="birthdayCard">
+      <div class="card-header">
+        <div class="date-pill">🗓️ November 3rd • Sweet 16th</div>
+        <h1 class="card-title">Happy Birthday, <span>Toz!</span> 🎉</h1>
+        <p class="birthday-quote">"Wishing you the brightest year full of laughter, love & memories!"</p>
+      </div>
 
-      <button onclick="spawnBalloonsWave()" class="px-4 py-2.5 rounded-2xl bg-white hover:bg-warm-peach border border-warm-cocoa/15 text-warm-cocoa font-fredoka font-semibold text-xs sm:text-sm shadow-sm transition active:scale-95 flex items-center gap-1.5">
-        <span>🎈</span> Launch Balloons
-      </button>
-
-      <button onclick="copyBirthdayWish()" class="px-4 py-2.5 rounded-2xl bg-white hover:bg-warm-peach border border-warm-cocoa/15 text-warm-cocoa font-fredoka font-semibold text-xs sm:text-sm shadow-sm transition active:scale-95 flex items-center gap-1.5">
-        <span>💌</span> Copy Note
-      </button>
-    </div>
-
-    <!-- Interactive: Leave a Personal Birthday Wish -->
-    <div class="w-full max-w-lg mx-auto mt-10 bg-white rounded-3xl p-5 sm:p-6 border border-warm-peach shadow-sm">
-      <div class="flex items-center gap-2.5 mb-3">
-        <span class="text-xl">✍️</span>
-        <div>
-          <h3 class="font-fredoka text-sm sm:text-base font-bold text-warm-cocoa">Sign Toz's 16th Birthday Guestbook</h3>
-          <p class="text-[11px] text-gray-400">Leave your own shoutout for November 3rd</p>
+      <!-- Interactive Candles -->
+      <div class="cake-section">
+        <div class="cake-row">
+          <div class="candle-group" onclick="toggleCandles()" title="Tap to blow out candles!">
+            <div class="candle">
+              <div class="flame" id="flame1"></div>
+              <div class="candle-stick"></div>
+            </div>
+            <div class="candle">
+              <div class="flame" id="flame2"></div>
+              <div class="candle-stick"></div>
+            </div>
+          </div>
+          <div class="cake-base">🎂</div>
+        </div>
+        <div class="cake-status" id="candleStatus" onclick="toggleCandles()">
+          Tap candles to make a wish & blow them out 💨
         </div>
       </div>
-      
-      <div class="space-y-2.5">
-        <div class="grid grid-cols-2 gap-2">
-          <input id="guestName" type="text" placeholder="Your name (e.g. Jordan)" class="w-full px-3 py-2 text-xs rounded-xl bg-warm-vanilla border border-warm-peach focus:outline-none focus:ring-2 focus:ring-warm-coral/30">
-          <input id="guestEmoji" type="text" placeholder="Avatar emoji (e.g. 🦊)" value="✨" class="w-full px-3 py-2 text-xs rounded-xl bg-warm-vanilla border border-warm-peach focus:outline-none focus:ring-2 focus:ring-warm-coral/30">
+
+      <!-- Friend Message Tabs -->
+      <span class="tabs-label">Messages from friends:</span>
+      <div class="tabs-bar" id="tabsBar">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Friend Wish Content -->
+      <div class="wish-box" id="wishBox">
+        <div class="wish-header">
+          <div class="big-avatar" id="authorAvatar"></div>
+          <div class="wish-meta">
+            <h3 id="authorName">Cas</h3>
+            <span id="authorRole">Bestie</span>
+          </div>
         </div>
-        <textarea id="guestMessage" rows="2" placeholder="Write a warm 16th birthday wish for Toz..." class="w-full px-3 py-2 text-xs rounded-xl bg-warm-vanilla border border-warm-peach focus:outline-none focus:ring-2 focus:ring-warm-coral/30"></textarea>
-        <button onclick="addCustomWish()" class="w-full py-2 bg-warm-coral hover:bg-rose-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
-          <i class="fas fa-paper-plane text-[10px]"></i> Post Birthday Wish for Toz
+        <p class="wish-text" id="wishContent"></p>
+      </div>
+
+      <!-- Bottom Re-close Option -->
+      <div class="card-actions">
+        <button class="reclose-btn" onclick="closeEnvelope()">
+          ✉️ Put card back in envelope
         </button>
       </div>
     </div>
 
-    <!-- Toast Notification (clean pill) -->
-    <div id="toastBox" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-warm-cocoa text-white px-5 py-2.5 rounded-full text-xs font-semibold shadow-xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
-      <i id="toastIcon" class="fas fa-check-circle text-amber-300"></i>
-      <span id="toastMsg">Notification message</span>
-    </div>
+  </div>
 
-  </main>
-
-  <!-- Clean Warm Footer -->
-  <footer class="relative z-20 py-4 text-center border-t border-warm-cocoa/10 bg-warm-cream/80 text-xs text-gray-500">
-    Made with warm wishes for <span class="font-bold text-warm-cocoa">Toz</span> • Happy 16th Birthday (November 3rd) 🎉
-  </footer>
-
-  <!-- Web Audio & Interactivity Script -->
   <script>
-    // Audio Context for sweet chime notes
-    let audioEnabled = true;
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
-
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new AudioCtx();
+    // 1. Data for friends with profile picture filenames from GitHub repo
+    const wishes = [
+      {
+        id: "cas",
+        name: "Cas",
+        role: "Friend",
+        img: "cas.png",
+        message: "HAPPY 16TH BIRTHDAY TOZ!! 🎉 Can't believe you're 16 already! You're honestly one of the best people to be around, always keeping things so fun and memorable. I hope today gives you everything you've wished for and so much more! Never change! 💕"
+      },
+      {
+        id: "sweet",
+        name: "Sweet",
+        role: "Friend",
+        img: "sweet.png",
+        message: "Toz, sweetest 16th to you! 🌸 You have such a kind and vibrant heart, and every memory we make together is unforgettable. May this year bring you all the success, happiness, and peace in the world. Enjoy every single moment of your special day! 🍰✨"
+      },
+      {
+        id: "tsumiki",
+        name: "Tsumiki",
+        role: "Friend",
+        img: "tsumiki.png",
+        message: "Happy sweet sixteen, Toz!! 🎀 Wishing you tons of love, sweet cake, and zero stress! Thank you for being such an awesome friend and always bringing smiles to everyone. You deserve the happiest year ahead!"
+      },
+      {
+        id: "ren",
+        name: "Ren",
+        role: "Friend",
+        img: "ren.png",
+        message: "Happy Birthday Toz!! 🎂 16 is a huge milestone! I hope you get celebrated like the queen you are today. Keep shining, dreaming big, and staying true to yourself. Let's make this year an absolute masterpiece!"
+      },
+      {
+        id: "alex",
+        name: "Alex",
+        role: "Friend",
+        img: "alex.png",
+        message: "Happy 16th Toz! 🎈 Super grateful to have you in my circle. You bring so much good energy and joy wherever you go. Eat lots of good food today and have the most incredible birthday!"
       }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    }
+    ];
 
-    function playTone(freq, type = 'sine', duration = 0.2, gainValue = 0.1) {
-      if (!audioEnabled) return;
-      try {
-        initAudio();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(gainValue, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    let activeTabId = "cas";
+    let candlesBlown = false;
 
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      } catch (err) {
-        // Safe audio fallback
-      }
-    }
+    // 2. Tab and Content Rendering with Image Fallbacks
+    function renderTabs() {
+      const tabsBar = document.getElementById('tabsBar');
+      tabsBar.innerHTML = '';
 
-    function toggleAudio() {
-      audioEnabled = !audioEnabled;
-      const soundBtn = document.getElementById('soundBtn');
-      const soundIcon = document.getElementById('soundIcon');
-      if (audioEnabled) {
-        soundIcon.className = "fas fa-volume-up text-amber-500";
-        showToast("Chimes turned on 🔔");
-      } else {
-        soundIcon.className = "fas fa-volume-mute text-gray-400";
-        showToast("Audio muted 🔕");
-      }
-    }
+      wishes.forEach(friend => {
+        const btn = document.createElement('button');
+        btn.className = `tab-btn ${friend.id === activeTabId ? 'active' : ''}`;
+        btn.onclick = () => selectTab(friend.id);
 
-    // Envelope State
-    let isEnvelopeOpen = false;
-    let areCandlesLit = true;
-
-    function toggleEnvelope() {
-      isEnvelopeOpen = !isEnvelopeOpen;
-      const envelope = document.getElementById('envelopeWrapper');
-      const btnText = document.getElementById('openBtnText');
-      const btnIcon = document.getElementById('openBtnIcon');
-      const hint = document.getElementById('instructionHint');
-
-      if (isEnvelopeOpen) {
-        envelope.classList.add('envelope-open');
-        btnText.innerText = "Close Envelope";
-        btnIcon.className = "fas fa-envelope";
-        hint.innerText = "Scroll through wishes or blow out Toz's 16th candles!";
-        
-        // Gentle joyful jingle
-        playTone(523.25, 'sine', 0.18, 0.15); // C5
-        setTimeout(() => playTone(659.25, 'sine', 0.2, 0.15), 140); // E5
-        setTimeout(() => playTone(783.99, 'sine', 0.3, 0.15), 280); // G5
-
-        // Confetti and balloons on opening
-        triggerConfetti();
-        spawnBalloonsWave();
-      } else {
-        envelope.classList.remove('envelope-open');
-        btnText.innerText = "Open Birthday Card";
-        btnIcon.className = "fas fa-envelope-open";
-        hint.innerText = "Tap the envelope or button to unfold your card!";
-        playTone(392.00, 'sine', 0.18, 0.1);
-      }
-    }
-
-    // Click envelope itself to toggle
-    document.getElementById('envelopeWrapper').addEventListener('click', (e) => {
-      // Don't close if user is selecting tabs, clicking cake, or guestbook inside
-      if (e.target.closest('#tabsBar') || e.target.closest('.tab-content') || e.target.closest('#cakeActionBtn') || e.target.closest('.candle-flame')) {
-        return;
-      }
-      toggleEnvelope();
-    });
-
-    // Tab Switching Functionality
-    function selectTab(friend) {
-      // Update Tab Buttons
-      const buttons = document.querySelectorAll('.tab-btn');
-      buttons.forEach(btn => {
-        btn.classList.remove('bg-white', 'shadow-sm', 'text-warm-coral', 'border', 'border-warm-coral/30');
-        btn.classList.add('text-gray-600');
+        btn.innerHTML = `
+          <div class="tab-avatar">
+            <img src="${friend.img}" alt="${friend.name}" onerror="this.onerror=null; this.parentElement.innerText='${friend.name[0]}';">
+          </div>
+          <span>${friend.name}</span>
+        `;
+        tabsBar.appendChild(btn);
       });
 
-      const activeBtn = document.getElementById(`tab-btn-${friend}`);
-      if (activeBtn) {
-        activeBtn.classList.add('bg-white', 'shadow-sm', 'text-warm-coral', 'border', 'border-warm-coral/30');
-        activeBtn.classList.remove('text-gray-600');
-      }
-
-      // Hide all contents
-      const contents = document.querySelectorAll('.tab-content');
-      contents.forEach(c => c.classList.add('hidden'));
-
-      // Show selected content
-      const targetContent = document.getElementById(`tab-${friend}`);
-      if (targetContent) {
-        targetContent.classList.remove('hidden');
-      }
-
-      playTone(600, 'sine', 0.08, 0.08);
+      renderCurrentWish();
     }
 
-    // Cake & Candles Interactivity
-    function blowCandles(e) {
-      if (e) e.stopPropagation();
-
-      const f1 = document.getElementById('flame-1');
-      const f2 = document.getElementById('flame-2');
-      const s1 = document.getElementById('smoke-1');
-      const s2 = document.getElementById('smoke-2');
-      const status = document.getElementById('candleStatus');
-      const btn = document.getElementById('cakeActionBtn');
-
-      if (areCandlesLit) {
-        f1.classList.add('hidden');
-        f2.classList.add('hidden');
-        s1.classList.remove('hidden');
-        s2.classList.remove('hidden');
-        areCandlesLit = false;
-
-        status.innerText = "Wish granted! 🎉";
-        btn.innerHTML = `<span>🕯️</span> Relight`;
-
-        // Cheerful fanfare
-        playTone(587.33, 'triangle', 0.2, 0.15); // D5
-        setTimeout(() => playTone(880.00, 'sine', 0.4, 0.2), 150); // A5
-
-        triggerConfetti();
-        showToast("🎂 Blew out candles 1 & 6! Happy 16th Toz!");
-      } else {
-        // Relight candles
-        f1.classList.remove('hidden');
-        f2.classList.remove('hidden');
-        s1.classList.add('hidden');
-        s2.classList.add('hidden');
-        areCandlesLit = true;
-
-        status.innerText = "Make a 16th Wish!";
-        btn.innerHTML = `<span>💨</span> Blow Out`;
-
-        playTone(740, 'sine', 0.12, 0.1);
-        showToast("Candles relit! ✨");
-      }
+    function selectTab(id) {
+      activeTabId = id;
+      renderTabs();
     }
 
-    // Confetti Burst Helper
-    function triggerConfetti() {
-      confetti({
-        particleCount: 55,
-        spread: 60,
-        origin: { y: 0.65 },
-        colors: ['#FF7E8B', '#FFD166', '#06D6A0', '#118AB2', '#F78C6B']
-      });
-    }
+    function renderCurrentWish() {
+      const current = wishes.find(w => w.id === activeTabId) || wishes[0];
+      
+      document.getElementById('authorName').innerText = current.name;
+      document.getElementById('authorRole').innerText = current.role;
+      document.getElementById('wishContent').innerText = `"${current.message}"`;
 
-    // Floating Balloons Logic
-    const balloonPalette = ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA', '#FCD34D'];
-    const balloonContainer = document.getElementById('balloon-container');
-
-    function createBalloon() {
-      const b = document.createElement('div');
-      b.className = 'floating-balloon pointer-events-auto';
-      const color = balloonPalette[Math.floor(Math.random() * balloonPalette.length)];
-      const size = Math.floor(Math.random() * 20) + 38; // 38px to 58px
-      const left = Math.random() * 88;
-      const duration = Math.random() * 5 + 8; // 8s to 13s
-
-      b.style.left = `${left}%`;
-      b.style.bottom = '-80px';
-      b.style.animationDuration = `${duration}s`;
-
-      b.innerHTML = `
-        <div style="width:${size}px; height:${size * 1.25}px; background: radial-gradient(circle at 35% 30%, #ffffff88 0%, ${color} 70%); border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; box-shadow: 0 4px 10px rgba(74,62,61,0.12); position:relative;">
-          <div style="position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); width:6px; height:5px; background:${color}; border-radius:2px;"></div>
-          <div style="position:absolute; bottom:-22px; left:50%; width:1px; height:18px; background:rgba(74,62,61,0.25);"></div>
-        </div>
+      const avatarBox = document.getElementById('authorAvatar');
+      avatarBox.innerHTML = `
+        <img src="${current.img}" alt="${current.name}" onerror="this.onerror=null; this.parentElement.innerText='${current.name[0]}';">
       `;
+    }
 
-      // Pop on click
-      b.addEventListener('click', (e) => {
-        e.stopPropagation();
-        playTone(400, 'sine', 0.08, 0.2);
-        const rect = b.getBoundingClientRect();
-        confetti({
-          particleCount: 12,
-          startVelocity: 15,
-          spread: 60,
-          origin: {
-            x: (rect.left + rect.width / 2) / window.innerWidth,
-            y: (rect.top + rect.height / 2) / window.innerHeight
-          },
-          colors: [color, '#ffffff']
-        });
-        b.remove();
-      });
-
-      balloonContainer.appendChild(b);
+    // 3. Envelope Open / Close Logic + Confetti
+    function openEnvelope() {
+      const flap = document.getElementById('envelopeFlap');
+      flap.style.transform = "rotateX(180deg)";
+      
+      // Fire celebration confetti automatically upon opening
+      fireConfettiBurst();
 
       setTimeout(() => {
-        if (b && b.parentNode) b.remove();
-      }, duration * 1000);
+        document.getElementById('envelopeBox').style.display = 'none';
+        document.getElementById('openPrompt').style.display = 'none';
+        document.getElementById('birthdayCard').style.display = 'block';
+      }, 350);
     }
 
-    function spawnBalloonsWave() {
-      for (let i = 0; i < 6; i++) {
-        setTimeout(createBalloon, i * 220);
+    function closeEnvelope() {
+      const flap = document.getElementById('envelopeFlap');
+      document.getElementById('birthdayCard').style.display = 'none';
+      document.getElementById('envelopeBox').style.display = 'flex';
+      document.getElementById('openPrompt').style.display = 'flex';
+      flap.style.transform = "rotateX(0deg)";
+    }
+
+    // 4. Confetti trigger
+    function fireConfettiBurst() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#FF6B8B', '#FFD166', '#06D6A0', '#118AB2', '#FFAAA6']
+        });
+        setTimeout(() => {
+          confetti({
+            particleCount: 50,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+          });
+          confetti({
+            particleCount: 50,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+          });
+        }, 250);
       }
     }
 
-    // Initial passive floating balloons
-    setInterval(() => {
-      if (document.visibilityState === 'visible' && balloonContainer.children.length < 10) {
-        createBalloon();
-      }
-    }, 2800);
+    // 5. Candle Blow Interaction
+    function toggleCandles() {
+      const f1 = document.getElementById('flame1');
+      const f2 = document.getElementById('flame2');
+      const status = document.getElementById('candleStatus');
 
-    // Initial spawn
-    for (let i = 0; i < 4; i++) {
-      setTimeout(createBalloon, i * 400);
-    }
+      candlesBlown = !candlesBlown;
 
-    // Add Custom Birthday Wish to Tabs
-    function addCustomWish() {
-      const nameInput = document.getElementById('guestName');
-      const emojiInput = document.getElementById('guestEmoji');
-      const msgInput = document.getElementById('guestMessage');
-
-      const name = nameInput.value.trim() || 'Friend';
-      const emoji = emojiInput.value.trim() || '💌';
-      const msg = msgInput.value.trim();
-
-      if (!msg) {
-        showToast("Please write a small wish first! ✍️");
-        return;
-      }
-
-      const tabsBar = document.getElementById('tabsBar');
-      const tabId = 'tab-user-' + Date.now();
-      const btnId = 'tab-btn-' + tabId;
-
-      // Create new tab button
-      const newBtn = document.createElement('button');
-      newBtn.id = btnId;
-      newBtn.className = "tab-btn px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 text-gray-600 hover:text-warm-cocoa shrink-0";
-      newBtn.innerHTML = `<span>${emoji}</span> ${name}`;
-      newBtn.onclick = () => selectTab(tabId);
-      tabsBar.appendChild(newBtn);
-
-      // Create content container
-      const container = document.querySelector('.min-h-\\[95px\\]');
-      const newContent = document.createElement('div');
-      newContent.id = `tab-${tabId}`;
-      newContent.className = "tab-content hidden w-full flex items-start gap-3";
-      newContent.innerHTML = `
-        <div class="w-10 h-10 rounded-full bg-rose-100 border border-rose-300 flex items-center justify-center text-xl shrink-0">
-          ${emoji}
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="font-fredoka text-xs font-bold text-warm-cocoa">${name}</span>
-            <span class="text-[10px] text-gray-400">@guest • Just now</span>
-          </div>
-          <p class="text-xs text-gray-600 mt-1 leading-snug">"${msg}"</p>
-        </div>
-      `;
-      container.appendChild(newContent);
-
-      // Clear input and switch to this tab
-      nameInput.value = '';
-      msgInput.value = '';
-      selectTab(tabId);
-
-      // Open envelope if closed
-      if (!isEnvelopeOpen) {
-        toggleEnvelope();
-      }
-
-      showToast(`Added wish from ${name}! 💌`);
-      triggerConfetti();
-    }
-
-    // Copy Birthday Note to Clipboard
-    function copyBirthdayWish() {
-      const text = "🎉 Happy 16th Birthday Toz! Wishing you a super sweet sixteen on November 3rd filled with happiness, laughs, and memorable times!";
-      try {
-        const dummy = document.createElement("textarea");
-        dummy.value = text;
-        document.body.appendChild(dummy);
-        dummy.select();
-        document.execCommand("copy");
-        document.body.removeChild(dummy);
-        showToast("Birthday message copied! 📋");
-      } catch (err) {
-        showToast("Happy 16th Birthday Toz! 🎉");
+      if (candlesBlown) {
+        f1.classList.add('blown');
+        f2.classList.add('blown');
+        status.innerHTML = "✨ Wish granted! Happy 16th Toz! (Tap to relight) 🕯️";
+        fireConfettiBurst();
+      } else {
+        f1.classList.remove('blown');
+        f2.classList.remove('blown');
+        status.innerHTML = "Tap candles to make a wish & blow them out 💨";
       }
     }
 
-    // Clean Toast Alert
-    let toastTimer;
-    function showToast(message) {
-      const box = document.getElementById('toastBox');
-      const msg = document.getElementById('toastMsg');
-      msg.innerText = message;
-
-      box.classList.remove('opacity-0', 'pointer-events-none');
-      box.classList.add('opacity-100');
-
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        box.classList.remove('opacity-100');
-        box.classList.add('opacity-0', 'pointer-events-none');
-      }, 2800);
+    // 6. Subtle background balloons
+    function createAmbientBalloons() {
+      const container = document.getElementById('balloonLayer');
+      const colors = ['#FFC2D1', '#FFE5D9', '#D8E2DC', '#FFE8D6', '#E8DFF5'];
+      
+      for (let i = 0; i < 7; i++) {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.style.left = `${Math.random() * 92 + 2}%`;
+        balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.animationDelay = `${Math.random() * 8}s`;
+        balloon.style.animationDuration = `${12 + Math.random() * 6}s`;
+        container.appendChild(balloon);
+      }
     }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTabs();
+      createAmbientBalloons();
+    });
   </script>
 </body>
 </html>
