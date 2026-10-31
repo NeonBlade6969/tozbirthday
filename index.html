@@ -50,7 +50,6 @@
       position: relative;
     }
 
-    /* Floating Ambient Balloons */
     .balloon-layer {
       position: fixed;
       inset: 0;
@@ -87,7 +86,6 @@
       100% { transform: translateY(-115vh) rotate(15deg); opacity: 0; }
     }
 
-    /* Container */
     .scene-wrap {
       width: 100%;
       max-width: 580px;
@@ -99,7 +97,6 @@
       align-items: center;
     }
 
-    /* ================= CLOSED ENVELOPE ================= */
     .envelope-box {
       width: 100%;
       max-width: 440px;
@@ -247,7 +244,6 @@
       50% { transform: scale(1.08); }
     }
 
-    /* ================= OPEN CARD ================= */
     .card-wrap {
       display: none;
       width: 100%;
@@ -303,7 +299,6 @@
       margin: 4px 0 16px;
     }
 
-    /* ================= REFINED BIRTHDAY CAKE ================= */
     .cake-showcase {
       display: flex;
       flex-direction: column;
@@ -328,7 +323,6 @@
       user-select: none;
     }
 
-    /* Platter */
     .cake-plate {
       width: 210px;
       height: 12px;
@@ -339,7 +333,6 @@
       z-index: 1;
     }
 
-    /* Bottom Tier */
     .cake-tier-bottom {
       width: 170px;
       height: 52px;
@@ -373,7 +366,6 @@
       letter-spacing: 4px;
     }
 
-    /* Top Tier */
     .cake-tier-top {
       width: 120px;
       height: 42px;
@@ -409,7 +401,6 @@
       letter-spacing: 8px;
     }
 
-    /* Candles */
     .candles-wrapper {
       display: flex;
       gap: 24px;
@@ -446,7 +437,6 @@
       background: #735144;
     }
 
-    /* Flames & Glow */
     .candle-unit .flame {
       width: 14px;
       height: 22px;
@@ -464,7 +454,6 @@
       100% { transform: scale(0.96) rotate(-2deg); }
     }
 
-    /* Blown state */
     .flame.blown {
       opacity: 0;
       transform: translateY(-12px) scale(0.1);
@@ -507,7 +496,6 @@
       color: var(--accent);
     }
 
-    /* ================= FRIEND TABS ================= */
     .tabs-label {
       font-size: 13px;
       font-weight: 800;
@@ -579,7 +567,6 @@
       object-fit: cover;
     }
 
-    /* Wish Box */
     .wish-box {
       background: #FFFDF9;
       border: 1.5px solid #F1E2D4;
@@ -637,7 +624,6 @@
       position: relative;
     }
 
-    /* Actions bottom */
     .card-actions {
       display: flex;
       justify-content: center;
@@ -664,16 +650,52 @@
       background: #F8ECE0;
       color: var(--primary);
     }
+
+    @media (max-width: 480px) {
+      .envelope-box {
+        max-width: 320px;
+        height: 220px;
+      }
+      .env-top-tri {
+        border-left-width: 158px;
+        border-right-width: 158px;
+        border-top-width: 115px;
+      }
+      .env-bot-tri {
+        border-left-width: 158px;
+        border-right-width: 158px;
+        border-bottom-width: 105px;
+      }
+      .env-side-left, .env-side-right {
+        border-top-width: 110px;
+        border-bottom-width: 110px;
+      }
+      .env-side-left { border-left-width: 120px; }
+      .env-side-right { border-right-width: 120px; }
+      .heart-seal {
+        top: 85px;
+        width: 50px;
+        height: 50px;
+      }
+      .airmail-badge {
+        bottom: 18px;
+        padding: 6px 16px;
+      }
+      .card-wrap {
+        padding: 24px 16px;
+      }
+      .card-title {
+        font-size: 26px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Floating background balloons -->
   <div class="balloon-layer" id="balloonLayer"></div>
 
   <div class="scene-wrap">
 
-    <!-- CLOSED ENVELOPE VIEW -->
     <div class="envelope-box" id="envelopeBox" onclick="openEnvelope()">
       <div class="env-top-tri" id="envelopeFlap"></div>
       <div class="env-side-left"></div>
@@ -695,7 +717,6 @@
       <span>✨ Tap the envelope to unseal</span>
     </div>
 
-    <!-- OPENED CARD VIEW -->
     <div class="card-wrap" id="birthdayCard">
       <div class="card-header">
         <div class="date-pill">🗓️ November 3rd • Sweet 16th</div>
@@ -703,11 +724,8 @@
         <p class="birthday-quote">"Wishing you the brightest year full of laughter, love & memories!"</p>
       </div>
 
-      <!-- IMPROVED CAKE SHOWCASE -->
       <div class="cake-showcase">
         <div class="cake-container" onclick="toggleCandles()" title="Tap to blow out or relight the candles!">
-          
-          <!-- Candles planted on top tier -->
           <div class="candles-wrapper">
             <div class="candle-unit">
               <div class="smoke" id="smoke1"></div>
@@ -723,15 +741,12 @@
             </div>
           </div>
 
-          <!-- Top Tier -->
           <div class="cake-tier-top">
             <div class="frosting-drips"></div>
           </div>
 
-          <!-- Bottom Tier -->
           <div class="cake-tier-bottom"></div>
 
-          <!-- Cake Plate -->
           <div class="cake-plate"></div>
         </div>
 
@@ -740,11 +755,9 @@
         </div>
       </div>
 
-      <!-- Friend Message Tabs -->
       <span class="tabs-label">Messages from friends:</span>
       <div class="tabs-bar" id="tabsBar"></div>
 
-      <!-- Friend Wish Content -->
       <div class="wish-box" id="wishBox">
         <div class="wish-header">
           <div class="big-avatar" id="authorAvatar"></div>
@@ -756,7 +769,6 @@
         <p class="wish-text" id="wishContent"></p>
       </div>
 
-      <!-- Re-close envelope -->
       <div class="card-actions">
         <button class="reclose-btn" onclick="closeEnvelope()">
           ✉️ Put card back in envelope
@@ -767,7 +779,8 @@
   </div>
 
   <script>
-    // GitHub Repo avatars
+    const ripAudio = new Audio('https://www.myinstants.com/media/sounds/paper-rip-fast.mp3');
+
     const wishes = [
       {
         id: "cas",
@@ -809,7 +822,6 @@
     let activeTabId = "cas";
     let candlesBlown = false;
 
-    // Tabs & Wishes Rendering
     function renderTabs() {
       const tabsBar = document.getElementById('tabsBar');
       tabsBar.innerHTML = '';
@@ -849,8 +861,10 @@
       `;
     }
 
-    // Envelope Interactions
     function openEnvelope() {
+      ripAudio.currentTime = 0;
+      ripAudio.play().catch(() => {});
+
       const flap = document.getElementById('envelopeFlap');
       flap.style.transform = "rotateX(180deg)";
       
@@ -871,7 +885,6 @@
       flap.style.transform = "rotateX(0deg)";
     }
 
-    // Confetti
     function fireConfettiBurst() {
       if (typeof confetti === 'function') {
         confetti({
@@ -897,7 +910,6 @@
       }
     }
 
-    // Cake & Candle Interaction
     function toggleCandles() {
       const f1 = document.getElementById('flame1');
       const f2 = document.getElementById('flame2');
@@ -913,7 +925,7 @@
         
         s1.classList.remove('active');
         s2.classList.remove('active');
-        void s1.offsetWidth; // trigger reflow
+        void s1.offsetWidth;
         s1.classList.add('active');
         s2.classList.add('active');
 
@@ -928,7 +940,6 @@
       }
     }
 
-    // Ambient floating balloons
     function createAmbientBalloons() {
       const container = document.getElementById('balloonLayer');
       const colors = ['#FFC2D1', '#FFE5D9', '#D8E2DC', '#FFE8D6', '#E8DFF5'];
