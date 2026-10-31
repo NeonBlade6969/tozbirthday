@@ -22,6 +22,9 @@
       --muted: #8F7265;
       --border-color: #EED7C5;
       --shadow: 0 16px 36px -12px rgba(93, 56, 42, 0.12);
+      --cake-frosting: #FFF3E6;
+      --cake-sponge: #FFD2DC;
+      --cake-accent: #FF8FA3;
     }
 
     * {
@@ -84,7 +87,7 @@
       100% { transform: translateY(-115vh) rotate(15deg); opacity: 0; }
     }
 
-    /* Card & Envelope Container */
+    /* Container */
     .scene-wrap {
       width: 100%;
       max-width: 580px;
@@ -264,7 +267,7 @@
 
     .card-header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .date-pill {
@@ -294,90 +297,217 @@
 
     .birthday-quote {
       font-family: 'Caveat', cursive;
-      font-size: 23px;
+      font-size: 22px;
       color: #9E5A47;
       text-align: center;
-      margin: 4px 0 20px;
+      margin: 4px 0 16px;
     }
 
-    /* Mini Cake Interaction */
-    .cake-section {
+    /* ================= REFINED BIRTHDAY CAKE ================= */
+    .cake-showcase {
       display: flex;
       flex-direction: column;
       align-items: center;
       background: #FFF9F3;
       border: 1.5px dashed #F0D5C3;
-      border-radius: 20px;
-      padding: 16px;
+      border-radius: 22px;
+      padding: 22px 16px 16px;
       margin-bottom: 24px;
+      position: relative;
     }
 
-    .cake-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 8px;
-    }
-
-    .candle-group {
-      display: flex;
-      gap: 16px;
-      cursor: pointer;
-    }
-
-    .candle {
+    .cake-container {
+      position: relative;
+      width: 220px;
+      height: 160px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-end;
+      cursor: pointer;
       user-select: none;
     }
 
-    .flame {
+    /* Platter */
+    .cake-plate {
+      width: 210px;
+      height: 12px;
+      background: #EDE1D5;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(90, 50, 30, 0.1);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Bottom Tier */
+    .cake-tier-bottom {
+      width: 170px;
+      height: 52px;
+      background: var(--cake-sponge);
+      border-radius: 14px 14px 4px 4px;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      box-shadow: inset 0 -4px 0 rgba(0,0,0,0.06);
+    }
+
+    .cake-tier-bottom::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 14px;
+      background: var(--cake-frosting);
+      border-radius: 0 0 8px 8px;
+    }
+
+    .cake-tier-bottom::after {
+      content: '🍓 🌸 🍓 🌸 🍓';
+      position: absolute;
+      bottom: 6px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 4px;
+    }
+
+    /* Top Tier */
+    .cake-tier-top {
+      width: 120px;
+      height: 42px;
+      background: #FFE0E7;
+      border-radius: 12px 12px 3px 3px;
+      position: relative;
+      z-index: 3;
+      margin-bottom: -4px;
+      overflow: hidden;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.05);
+    }
+
+    .frosting-drips {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 15px;
+      background: var(--cake-frosting);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 2px 4px rgba(255, 107, 139, 0.15);
+    }
+
+    .frosting-drips::after {
+      content: '• • • • •';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #FF8FA3;
+      font-size: 14px;
+      letter-spacing: 8px;
+    }
+
+    /* Candles */
+    .candles-wrapper {
+      display: flex;
+      gap: 24px;
+      position: absolute;
+      top: 10px;
+      z-index: 4;
+    }
+
+    .candle-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .candle-unit .stick {
+      width: 10px;
+      height: 38px;
+      border-radius: 4px;
+      background: repeating-linear-gradient(
+        45deg,
+        #FF8FA3,
+        #FF8FA3 5px,
+        #FFF 5px,
+        #FFF 10px
+      );
+      box-shadow: inset -1px 0 2px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.08);
+      position: relative;
+    }
+
+    .candle-unit .wick {
+      width: 2px;
+      height: 6px;
+      background: #735144;
+    }
+
+    /* Flames & Glow */
+    .candle-unit .flame {
       width: 14px;
       height: 22px;
-      background: radial-gradient(#FFF07C 30%, #FF9900 70%, transparent 95%);
+      background: radial-gradient(ellipse at bottom, #FFF7A1 20%, #FFA834 65%, #FF5900 100%);
       border-radius: 50% 50% 35% 35%;
-      box-shadow: 0 0 14px #FFB300;
-      animation: flicker 0.8s infinite alternate;
+      box-shadow: 0 0 16px #FFA500, 0 0 30px #FFD56B;
+      animation: flicker 0.9s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+      transform-origin: bottom center;
       transition: all 0.3s ease;
     }
 
+    @keyframes flicker {
+      0% { transform: scale(1) rotate(-3deg); }
+      50% { transform: scale(1.08, 1.15) rotate(2deg); }
+      100% { transform: scale(0.96) rotate(-2deg); }
+    }
+
+    /* Blown state */
     .flame.blown {
       opacity: 0;
-      transform: translateY(-8px) scale(0.2);
+      transform: translateY(-12px) scale(0.1);
+      box-shadow: none;
     }
 
-    @keyframes flicker {
-      0% { transform: rotate(-2deg) scale(1); }
-      100% { transform: rotate(3deg) scale(1.08); }
+    .smoke {
+      position: absolute;
+      top: -10px;
+      width: 8px;
+      height: 12px;
+      background: #D8D2CD;
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .candle-stick {
-      width: 12px;
-      height: 38px;
-      border-radius: 4px;
-      background: repeating-linear-gradient(45deg, #FF9FB2, #FF9FB2 6px, #FFF 6px, #FFF 12px);
-      box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+    .smoke.active {
+      animation: smokeRise 1.2s forwards ease-out;
     }
 
-    .cake-base {
-      font-size: 38px;
-      line-height: 1;
+    @keyframes smokeRise {
+      0% { opacity: 0.8; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-30px) scale(2.4); filter: blur(4px); }
     }
 
-    .cake-status {
+    .cake-hint {
+      margin-top: 12px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--muted);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
     }
 
-    .cake-status:hover {
+    .cake-hint:hover {
       color: var(--accent);
     }
 
-    /* Friend Message Tabs */
+    /* ================= FRIEND TABS ================= */
     .tabs-label {
       font-size: 13px;
       font-weight: 800;
@@ -449,7 +579,7 @@
       object-fit: cover;
     }
 
-    /* Wish Display Box */
+    /* Wish Box */
     .wish-box {
       background: #FFFDF9;
       border: 1.5px solid #F1E2D4;
@@ -573,31 +703,46 @@
         <p class="birthday-quote">"Wishing you the brightest year full of laughter, love & memories!"</p>
       </div>
 
-      <!-- Interactive Candles -->
-      <div class="cake-section">
-        <div class="cake-row">
-          <div class="candle-group" onclick="toggleCandles()" title="Tap to blow out candles!">
-            <div class="candle">
+      <!-- IMPROVED CAKE SHOWCASE -->
+      <div class="cake-showcase">
+        <div class="cake-container" onclick="toggleCandles()" title="Tap to blow out or relight the candles!">
+          
+          <!-- Candles planted on top tier -->
+          <div class="candles-wrapper">
+            <div class="candle-unit">
+              <div class="smoke" id="smoke1"></div>
               <div class="flame" id="flame1"></div>
-              <div class="candle-stick"></div>
+              <div class="wick"></div>
+              <div class="stick"></div>
             </div>
-            <div class="candle">
+            <div class="candle-unit">
+              <div class="smoke" id="smoke2"></div>
               <div class="flame" id="flame2"></div>
-              <div class="candle-stick"></div>
+              <div class="wick"></div>
+              <div class="stick"></div>
             </div>
           </div>
-          <div class="cake-base">🎂</div>
+
+          <!-- Top Tier -->
+          <div class="cake-tier-top">
+            <div class="frosting-drips"></div>
+          </div>
+
+          <!-- Bottom Tier -->
+          <div class="cake-tier-bottom"></div>
+
+          <!-- Cake Plate -->
+          <div class="cake-plate"></div>
         </div>
-        <div class="cake-status" id="candleStatus" onclick="toggleCandles()">
-          Tap candles to make a wish & blow them out 💨
+
+        <div class="cake-hint" id="candleStatus" onclick="toggleCandles()">
+          Tap candles to make a 16th wish & blow them out 💨
         </div>
       </div>
 
       <!-- Friend Message Tabs -->
       <span class="tabs-label">Messages from friends:</span>
-      <div class="tabs-bar" id="tabsBar">
-        <!-- Rendered by JS -->
-      </div>
+      <div class="tabs-bar" id="tabsBar"></div>
 
       <!-- Friend Wish Content -->
       <div class="wish-box" id="wishBox">
@@ -611,7 +756,7 @@
         <p class="wish-text" id="wishContent"></p>
       </div>
 
-      <!-- Bottom Re-close Option -->
+      <!-- Re-close envelope -->
       <div class="card-actions">
         <button class="reclose-btn" onclick="closeEnvelope()">
           ✉️ Put card back in envelope
@@ -622,7 +767,7 @@
   </div>
 
   <script>
-    // 1. Data for friends with profile picture filenames from GitHub repo
+    // GitHub Repo avatars
     const wishes = [
       {
         id: "cas",
@@ -664,7 +809,7 @@
     let activeTabId = "cas";
     let candlesBlown = false;
 
-    // 2. Tab and Content Rendering with Image Fallbacks
+    // Tabs & Wishes Rendering
     function renderTabs() {
       const tabsBar = document.getElementById('tabsBar');
       tabsBar.innerHTML = '';
@@ -704,12 +849,11 @@
       `;
     }
 
-    // 3. Envelope Open / Close Logic + Confetti
+    // Envelope Interactions
     function openEnvelope() {
       const flap = document.getElementById('envelopeFlap');
       flap.style.transform = "rotateX(180deg)";
       
-      // Fire celebration confetti automatically upon opening
       fireConfettiBurst();
 
       setTimeout(() => {
@@ -727,7 +871,7 @@
       flap.style.transform = "rotateX(0deg)";
     }
 
-    // 4. Confetti trigger
+    // Confetti
     function fireConfettiBurst() {
       if (typeof confetti === 'function') {
         confetti({
@@ -738,25 +882,27 @@
         });
         setTimeout(() => {
           confetti({
-            particleCount: 50,
+            particleCount: 45,
             angle: 60,
             spread: 55,
             origin: { x: 0 }
           });
           confetti({
-            particleCount: 50,
+            particleCount: 45,
             angle: 120,
             spread: 55,
             origin: { x: 1 }
           });
-        }, 250);
+        }, 220);
       }
     }
 
-    // 5. Candle Blow Interaction
+    // Cake & Candle Interaction
     function toggleCandles() {
       const f1 = document.getElementById('flame1');
       const f2 = document.getElementById('flame2');
+      const s1 = document.getElementById('smoke1');
+      const s2 = document.getElementById('smoke2');
       const status = document.getElementById('candleStatus');
 
       candlesBlown = !candlesBlown;
@@ -764,16 +910,25 @@
       if (candlesBlown) {
         f1.classList.add('blown');
         f2.classList.add('blown');
+        
+        s1.classList.remove('active');
+        s2.classList.remove('active');
+        void s1.offsetWidth; // trigger reflow
+        s1.classList.add('active');
+        s2.classList.add('active');
+
         status.innerHTML = "✨ Wish granted! Happy 16th Toz! (Tap to relight) 🕯️";
         fireConfettiBurst();
       } else {
         f1.classList.remove('blown');
         f2.classList.remove('blown');
-        status.innerHTML = "Tap candles to make a wish & blow them out 💨";
+        s1.classList.remove('active');
+        s2.classList.remove('active');
+        status.innerHTML = "Tap candles to make a 16th wish & blow them out 💨";
       }
     }
 
-    // 6. Subtle background balloons
+    // Ambient floating balloons
     function createAmbientBalloons() {
       const container = document.getElementById('balloonLayer');
       const colors = ['#FFC2D1', '#FFE5D9', '#D8E2DC', '#FFE8D6', '#E8DFF5'];
@@ -789,7 +944,6 @@
       }
     }
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       renderTabs();
       createAmbientBalloons();
