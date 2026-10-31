@@ -13,16 +13,15 @@
     :root {
       --bg: #FFF7ED;
       --card-bg: #FFFFFF;
-      --envelope-base: #F7E5C8;
-      --envelope-interior: #E8D3B0;
+      --envelope-base: #FCEFD8;
       --envelope-flap: #F5DFB8;
-      --envelope-side: #ECD2A8;
-      --envelope-front: #E2C394;
+      --envelope-dark: #E6CE9F;
       --accent: #FF6B8B;
       --accent-soft: #FFE3E8;
       --primary: #59352A;
       --muted: #8F7265;
       --border-color: #EED7C5;
+      --shadow: 0 16px 36px -12px rgba(93, 56, 42, 0.12);
       --cake-frosting: #FFF3E6;
       --cake-sponge: #FFD2DC;
     }
@@ -44,8 +43,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 40px 16px 80px;
+      justify-content: center;
+      padding: 24px 16px;
       overflow-x: hidden;
       position: relative;
     }
@@ -91,58 +90,93 @@
       max-width: 580px;
       position: relative;
       z-index: 10;
-      perspective: 1400px;
+      perspective: 1200px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 40px;
     }
 
-    .envelope-pocket {
-      position: relative;
+    .envelope-box {
       width: 100%;
-      max-width: 540px;
-      height: 360px;
+      max-width: 440px;
+      height: 300px;
       background: var(--envelope-base);
-      border-radius: 0 0 24px 24px;
-      box-shadow: 0 20px 45px rgba(89, 53, 42, 0.16);
-      transform-style: preserve-3d;
-      transition: height 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(89, 53, 42, 0.16);
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid var(--envelope-dark);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      overflow: hidden;
     }
 
-    .envelope-pocket.is-open {
-      height: auto;
-      min-height: 360px;
+    .envelope-box:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 24px 44px rgba(89, 53, 42, 0.2);
     }
 
-    .env-flap {
+    .env-top-tri {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
+      width: 0;
       height: 0;
-      border-left: 270px solid transparent;
-      border-right: 270px solid transparent;
-      border-top: 185px solid var(--envelope-flap);
+      border-left: 217px solid transparent;
+      border-right: 217px solid transparent;
+      border-top: 155px solid var(--envelope-flap);
+      z-index: 4;
       transform-origin: top center;
-      transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.3s;
-      z-index: 20;
-      cursor: pointer;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));
+      transition: transform 0.6s ease;
     }
 
-    .envelope-pocket.is-open .env-flap {
-      transform: rotateX(180deg);
+    .env-bot-tri {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 217px solid transparent;
+      border-right: 217px solid transparent;
+      border-bottom: 140px solid var(--envelope-base);
+      z-index: 3;
+    }
+
+    .env-side-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-top: 150px solid transparent;
+      border-bottom: 150px solid transparent;
+      border-left: 170px solid var(--envelope-dark);
+      opacity: 0.35;
+      z-index: 2;
+    }
+
+    .env-side-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-top: 150px solid transparent;
+      border-bottom: 150px solid transparent;
+      border-right: 170px solid var(--envelope-dark);
+      opacity: 0.35;
       z-index: 2;
     }
 
     .heart-seal {
       position: absolute;
-      top: -150px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 62px;
-      height: 62px;
+      top: 125px;
+      z-index: 6;
+      width: 60px;
+      height: 60px;
       background: var(--accent);
       border-radius: 50%;
       display: flex;
@@ -150,22 +184,14 @@
       align-items: center;
       justify-content: center;
       color: white;
-      box-shadow: 0 6px 18px rgba(255, 107, 139, 0.45);
+      box-shadow: 0 6px 16px rgba(255, 107, 139, 0.45);
       border: 3px solid #FFF;
       cursor: pointer;
       animation: pulse 2s infinite ease-in-out;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      z-index: 25;
-    }
-
-    .envelope-pocket.is-open .heart-seal {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(-50%) scale(0.5);
     }
 
     .heart-seal span {
-      font-size: 22px;
+      font-size: 20px;
       line-height: 1;
     }
 
@@ -176,71 +202,16 @@
       letter-spacing: 0.5px;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: translateX(-50%) scale(1); }
-      50% { transform: translateX(-50%) scale(1.08); }
-    }
-
-    .env-side-left {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 0;
-      border-top: 180px solid transparent;
-      border-bottom: 180px solid var(--envelope-side);
-      border-left: 270px solid var(--envelope-side);
-      z-index: 15;
-      pointer-events: none;
-    }
-
-    .env-side-right {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 0;
-      height: 0;
-      border-top: 180px solid transparent;
-      border-bottom: 180px solid var(--envelope-side);
-      border-right: 270px solid var(--envelope-side);
-      z-index: 15;
-      pointer-events: none;
-    }
-
-    .env-bottom-front {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 0;
-      border-left: 270px solid transparent;
-      border-right: 270px solid transparent;
-      border-bottom: 195px solid var(--envelope-front);
-      border-radius: 0 0 24px 24px;
-      z-index: 16;
-      pointer-events: none;
-    }
-
     .airmail-badge {
       position: absolute;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 18;
+      bottom: 30px;
+      z-index: 5;
       background: #FFFFFF;
-      padding: 10px 24px;
+      padding: 10px 22px;
       border-radius: 30px;
-      border: 2px dashed #D6B286;
+      border: 2px dashed #E3BFA5;
       text-align: center;
       box-shadow: 0 6px 14px rgba(0,0,0,0.06);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      cursor: pointer;
-    }
-
-    .envelope-pocket.is-open .airmail-badge {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(-50%) translateY(10px);
     }
 
     .airmail-badge .tag {
@@ -258,43 +229,35 @@
     }
 
     .open-prompt {
-      margin-top: 20px;
+      margin-top: 18px;
       font-size: 14px;
       font-weight: 700;
       color: var(--muted);
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: opacity 0.3s;
     }
 
-    .envelope-pocket.is-open ~ .open-prompt {
-      opacity: 0;
-      pointer-events: none;
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
     }
 
     .card-wrap {
-      width: calc(100% - 24px);
-      margin: 0 auto;
+      display: none;
+      width: 100%;
       background: var(--card-bg);
-      border-radius: 20px;
+      border-radius: 28px;
       border: 2px solid var(--border-color);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      padding: 30px 24px 28px;
+      box-shadow: var(--shadow);
+      padding: 32px 28px;
+      animation: popIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       position: relative;
-      z-index: 8;
-      transform: translateY(20px);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform 0.9s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.6s ease, z-index 0.1s;
     }
 
-    .envelope-pocket.is-open .card-wrap {
-      transform: translateY(-80px);
-      opacity: 1;
-      pointer-events: auto;
-      z-index: 25;
-      margin-bottom: -40px;
+    @keyframes popIn {
+      0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .card-header {
@@ -687,38 +650,34 @@
       color: var(--primary);
     }
 
-    @media (max-width: 580px) {
-      .envelope-pocket {
-        max-width: 95vw;
-        height: 250px;
+    @media (max-width: 480px) {
+      .envelope-box {
+        max-width: 320px;
+        height: 220px;
       }
-      .env-flap {
-        border-left-width: 47.5vw;
-        border-right-width: 47.5vw;
-        border-top-width: 130px;
+      .env-top-tri {
+        border-left-width: 158px;
+        border-right-width: 158px;
+        border-top-width: 115px;
       }
+      .env-bot-tri {
+        border-left-width: 158px;
+        border-right-width: 158px;
+        border-bottom-width: 105px;
+      }
+      .env-side-left, .env-side-right {
+        border-top-width: 110px;
+        border-bottom-width: 110px;
+      }
+      .env-side-left { border-left-width: 120px; }
+      .env-side-right { border-right-width: 120px; }
       .heart-seal {
-        top: -110px;
-        width: 52px;
-        height: 52px;
-      }
-      .env-side-left {
-        border-top-width: 125px;
-        border-bottom-width: 125px;
-        border-left-width: 47.5vw;
-      }
-      .env-side-right {
-        border-top-width: 125px;
-        border-bottom-width: 125px;
-        border-right-width: 47.5vw;
-      }
-      .env-bottom-front {
-        border-left-width: 47.5vw;
-        border-right-width: 47.5vw;
-        border-bottom-width: 135px;
+        top: 85px;
+        width: 50px;
+        height: 50px;
       }
       .airmail-badge {
-        bottom: 16px;
+        bottom: 18px;
         padding: 6px 16px;
       }
       .card-wrap {
@@ -726,9 +685,6 @@
       }
       .card-title {
         font-size: 26px;
-      }
-      .envelope-pocket.is-open .card-wrap {
-        transform: translateY(-50px);
       }
     }
   </style>
@@ -739,78 +695,18 @@
 
   <div class="scene-wrap">
 
-    <div class="envelope-pocket" id="envelopePocket">
-      <div class="env-flap" onclick="toggleEnvelope()">
-        <div class="heart-seal">
-          <span>💌</span>
-          <small>OPEN</small>
-        </div>
-      </div>
-
-      <div class="card-wrap" id="birthdayCard">
-        <div class="card-header">
-          <div class="date-pill">🗓️ November 3rd • Sweet 16th</div>
-          <h1 class="card-title">Happy Birthday, <span>Toz!</span> 🎉</h1>
-          <p class="birthday-quote">"Wishing you the brightest year full of laughter, love & memories!"</p>
-        </div>
-
-        <div class="cake-showcase">
-          <div class="cake-container" onclick="toggleCandles()" title="Tap to blow out or relight the candles!">
-            <div class="candles-wrapper">
-              <div class="candle-unit">
-                <div class="smoke" id="smoke1"></div>
-                <div class="flame" id="flame1"></div>
-                <div class="wick"></div>
-                <div class="stick"></div>
-              </div>
-              <div class="candle-unit">
-                <div class="smoke" id="smoke2"></div>
-                <div class="flame" id="flame2"></div>
-                <div class="wick"></div>
-                <div class="stick"></div>
-              </div>
-            </div>
-
-            <div class="cake-tier-top">
-              <div class="frosting-drips"></div>
-            </div>
-
-            <div class="cake-tier-bottom"></div>
-
-            <div class="cake-plate"></div>
-          </div>
-
-          <div class="cake-hint" id="candleStatus" onclick="toggleCandles()">
-            Tap candles to make a 16th wish & blow them out 💨
-          </div>
-        </div>
-
-        <span class="tabs-label">Messages from friends:</span>
-        <div class="tabs-bar" id="tabsBar"></div>
-
-        <div class="wish-box" id="wishBox">
-          <div class="wish-header">
-            <div class="big-avatar" id="authorAvatar"></div>
-            <div class="wish-meta">
-              <h3 id="authorName">Cas</h3>
-              <span id="authorRole">Bestie</span>
-            </div>
-          </div>
-          <p class="wish-text" id="wishContent"></p>
-        </div>
-
-        <div class="card-actions">
-          <button class="reclose-btn" onclick="toggleEnvelope()">
-            ✉️ Put card back in envelope
-          </button>
-        </div>
-      </div>
-
+    <div class="envelope-box" id="envelopeBox" onclick="openEnvelope()">
+      <div class="env-top-tri" id="envelopeFlap"></div>
       <div class="env-side-left"></div>
       <div class="env-side-right"></div>
-      <div class="env-bottom-front"></div>
+      <div class="env-bot-tri"></div>
 
-      <div class="airmail-badge" onclick="toggleEnvelope()">
+      <div class="heart-seal">
+        <span>💌</span>
+        <small>OPEN</small>
+      </div>
+
+      <div class="airmail-badge">
         <div class="tag">Special Delivery</div>
         <div class="to">For Toz on her 16th 🎀</div>
       </div>
@@ -820,47 +716,71 @@
       <span>✨ Tap the envelope to unseal</span>
     </div>
 
+    <div class="card-wrap" id="birthdayCard">
+      <div class="card-header">
+        <div class="date-pill">🗓️ November 3rd • Sweet 16th</div>
+        <h1 class="card-title">Happy Birthday, <span>Toz!</span> 🎉</h1>
+        <p class="birthday-quote">"Wishing you the brightest year full of laughter, love & memories!"</p>
+      </div>
+
+      <div class="cake-showcase">
+        <div class="cake-container" onclick="toggleCandles()" title="Tap to blow out or relight the candles!">
+          <div class="candles-wrapper">
+            <div class="candle-unit">
+              <div class="smoke" id="smoke1"></div>
+              <div class="flame" id="flame1"></div>
+              <div class="wick"></div>
+              <div class="stick"></div>
+            </div>
+            <div class="candle-unit">
+              <div class="smoke" id="smoke2"></div>
+              <div class="flame" id="flame2"></div>
+              <div class="wick"></div>
+              <div class="stick"></div>
+            </div>
+          </div>
+
+          <div class="cake-tier-top">
+            <div class="frosting-drips"></div>
+          </div>
+
+          <div class="cake-tier-bottom"></div>
+
+          <div class="cake-plate"></div>
+        </div>
+
+        <div class="cake-hint" id="candleStatus" onclick="toggleCandles()">
+          Tap candles to make a 16th wish & blow them out 💨
+        </div>
+      </div>
+
+      <span class="tabs-label">Messages from friends:</span>
+      <div class="tabs-bar" id="tabsBar"></div>
+
+      <div class="wish-box" id="wishBox">
+        <div class="wish-header">
+          <div class="big-avatar" id="authorAvatar"></div>
+          <div class="wish-meta">
+            <h3 id="authorName">Cas</h3>
+            <span id="authorRole">Bestie</span>
+          </div>
+        </div>
+        <p class="wish-text" id="wishContent"></p>
+      </div>
+
+      <div class="card-actions">
+        <button class="reclose-btn" onclick="closeEnvelope()">
+          ✉️ Put card back in envelope
+        </button>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    function playRipSound() {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-
-        const bufferSize = audioCtx.sampleRate * 0.35;
-        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const data = buffer.getChannelData(0);
-
-        for (let i = 0; i < bufferSize; i++) {
-          const t = i / bufferSize;
-          const envelope = Math.sin(t * Math.PI) * Math.pow(1 - t, 0.4);
-          const crackle = Math.random() > 0.85 ? (Math.random() * 2 - 1) * 1.5 : (Math.random() * 2 - 1) * 0.5;
-          data[i] = crackle * envelope;
-        }
-
-        const noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
-
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = "bandpass";
-        filter.frequency.setValueAtTime(1400, audioCtx.currentTime);
-        filter.frequency.exponentialRampToValueAtTime(450, audioCtx.currentTime + 0.35);
-        filter.Q.setValueAtTime(1.8, audioCtx.currentTime);
-
-        const gainNode = audioCtx.createGain();
-        gainNode.gain.setValueAtTime(0.7, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
-
-        noise.connect(filter);
-        filter.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        noise.start();
-      } catch (e) {}
-    }
+    const ripAudio = new Audio('paper-ripping.mp3');
+    const bdayAudio = new Audio('bdaymusic.mp3');
+    bdayAudio.loop = true;
 
     const wishes = [
       {
@@ -910,10 +830,7 @@
       wishes.forEach(friend => {
         const btn = document.createElement('button');
         btn.className = `tab-btn ${friend.id === activeTabId ? 'active' : ''}`;
-        btn.onclick = (e) => {
-          e.stopPropagation();
-          selectTab(friend.id);
-        };
+        btn.onclick = () => selectTab(friend.id);
 
         btn.innerHTML = `
           <div class="tab-avatar">
@@ -945,19 +862,34 @@
       `;
     }
 
-    function toggleEnvelope() {
-      const pocket = document.getElementById('envelopePocket');
-      const isOpen = pocket.classList.contains('is-open');
+    function openEnvelope() {
+      ripAudio.currentTime = 0;
+      ripAudio.play().catch(() => {});
 
-      if (!isOpen) {
-        playRipSound();
-        pocket.classList.add('is-open');
-        setTimeout(() => {
-          fireConfettiBurst();
-        }, 300);
-      } else {
-        pocket.classList.remove('is-open');
-      }
+      bdayAudio.currentTime = 0;
+      bdayAudio.play().catch(() => {});
+
+      const flap = document.getElementById('envelopeFlap');
+      flap.style.transform = "rotateX(180deg)";
+      
+      fireConfettiBurst();
+
+      setTimeout(() => {
+        document.getElementById('envelopeBox').style.display = 'none';
+        document.getElementById('openPrompt').style.display = 'none';
+        document.getElementById('birthdayCard').style.display = 'block';
+      }, 350);
+    }
+
+    function closeEnvelope() {
+      bdayAudio.pause();
+      bdayAudio.currentTime = 0;
+
+      const flap = document.getElementById('envelopeFlap');
+      document.getElementById('birthdayCard').style.display = 'none';
+      document.getElementById('envelopeBox').style.display = 'flex';
+      document.getElementById('openPrompt').style.display = 'flex';
+      flap.style.transform = "rotateX(0deg)";
     }
 
     function fireConfettiBurst() {
@@ -985,8 +917,7 @@
       }
     }
 
-    function toggleCandles(e) {
-      if (e) e.stopPropagation();
+    function toggleCandles() {
       const f1 = document.getElementById('flame1');
       const f2 = document.getElementById('flame2');
       const s1 = document.getElementById('smoke1');
