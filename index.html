@@ -869,8 +869,7 @@
     <div class="cinema-frame" id="cinemaFrame">
       <img src="blamesweet.png" class="cinema-slide" alt="blamesweet" id="slide0">
       <img src="depression.png" class="cinema-slide" alt="depression" id="slide1">
-      <img src="toz1.png" class="cinema-slide" alt="toz1" id="slide2">
-      <img src="lol.png" class="cinema-slide" alt="lol" id="slide3">
+      <img src="lol.png" class="cinema-slide" alt="lol" id="slide2">
     </div>
     <button class="cinema-back-btn" onclick="stopCinemaLoop()">
       🔙 Go back
@@ -1022,10 +1021,9 @@
     /* Cinema Loop State */
     let cinemaInterval = null;
     let currentSlide = 0;
-    const totalSlides = 4;
+    const totalSlides = 3;
 
     function startCinemaLoop() {
-      // Pause background music if it was playing
       bdayAudio.pause();
 
       tuffAudio.currentTime = 0;
@@ -1061,7 +1059,6 @@
       tuffAudio.pause();
       tuffAudio.currentTime = 0;
 
-      // Resume birthday music if the card was open
       if (document.getElementById('birthdayCard').style.display === 'block') {
         bdayAudio.play().catch(() => {});
       }
