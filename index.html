@@ -968,6 +968,9 @@
     const bdayAudio = new Audio('bdaymusic.mp3');
     bdayAudio.loop = true;
 
+    const tuffAudio = new Audio('tuffsong.mp3');
+    tuffAudio.loop = true;
+
     const wishes = [
       {
         id: "cas",
@@ -988,7 +991,7 @@
         name: "Tsumiki",
         role: "Friend",
         img: "tsumiki.png",
-        message: "Happy sweet sixteen, Toz!! 🎀 Wishing you tons of love, sweet cake, and zero stress! Thank you for being such an awesome friend and always bringing smiles to everyone. You deserve the happiest year ahead!"
+        message: "HAPPIEST BIRTHDAY TOZ!!\n\nYou've become a friend so close who helped me when I was at my lowest and you've let me step into your world.. you're just so beautiful, more beautiful than your art itself and you're always so supportive! You've always had my back and gave me strength and a whole new perspective on things... happy birthday again, #iloveyousomuchhh!!"
       },
       {
         id: "ren",
@@ -1022,6 +1025,12 @@
     const totalSlides = 4;
 
     function startCinemaLoop() {
+      // Pause background music if it was playing
+      bdayAudio.pause();
+
+      tuffAudio.currentTime = 0;
+      tuffAudio.play().catch(() => {});
+
       fireConfettiBurst();
 
       const overlay = document.getElementById('cinemaOverlay');
@@ -1049,6 +1058,14 @@
     }
 
     function stopCinemaLoop() {
+      tuffAudio.pause();
+      tuffAudio.currentTime = 0;
+
+      // Resume birthday music if the card was open
+      if (document.getElementById('birthdayCard').style.display === 'block') {
+        bdayAudio.play().catch(() => {});
+      }
+
       clearInterval(cinemaInterval);
       const overlay = document.getElementById('cinemaOverlay');
       overlay.classList.remove('active');
