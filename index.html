@@ -49,6 +49,127 @@
       position: relative;
     }
 
+    /* Top Right "Button That Does Nothing" */
+    .useless-btn {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 100;
+      background: #FFFFFF;
+      border: 2px dashed var(--accent);
+      color: var(--primary);
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(255, 107, 139, 0.2);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .useless-btn:hover {
+      transform: translateY(-2px) scale(1.05) rotate(-2deg);
+      background: var(--accent-soft);
+      box-shadow: 0 6px 20px rgba(255, 107, 139, 0.35);
+    }
+
+    .useless-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Cinema Slideshow Overlay */
+    .cinema-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(22, 14, 12, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      padding: 20px;
+    }
+
+    .cinema-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .cinema-frame {
+      width: 90vw;
+      max-width: 480px;
+      aspect-ratio: 4 / 5;
+      background: #1A110F;
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: movieFramePop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes movieFramePop {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .cinema-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1);
+      transition: opacity 1s ease-in-out;
+      pointer-events: none;
+    }
+
+    /* Dramatic movie poster slow zoom */
+    .cinema-slide.show {
+      opacity: 1;
+      animation: movieKenBurns 4.5s ease-out forwards;
+    }
+
+    @keyframes movieKenBurns {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.18); }
+    }
+
+    .cinema-back-btn {
+      margin-top: 22px;
+      background: #FFFFFF;
+      border: none;
+      color: var(--primary);
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 10px 24px;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cinema-back-btn:hover {
+      transform: scale(1.06);
+      background: var(--accent);
+      color: #FFFFFF;
+    }
+
     .balloon-layer {
       position: fixed;
       inset: 0;
@@ -658,6 +779,12 @@
     }
 
     @media (max-width: 540px) {
+      .useless-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 11px;
+        padding: 6px 12px;
+      }
       .tabs-bar {
         grid-template-columns: repeat(3, 1fr);
         gap: 6px;
@@ -718,6 +845,24 @@
   </style>
 </head>
 <body>
+
+  <!-- Top Right Useless Button -->
+  <button class="useless-btn" onclick="startCinemaLoop()">
+    <span>🤡</span> button that does nothing
+  </button>
+
+  <!-- Cinema Poster Mode Overlay -->
+  <div class="cinema-overlay" id="cinemaOverlay">
+    <div class="cinema-frame" id="cinemaFrame">
+      <img src="blamesweet.png" class="cinema-slide" alt="blamesweet" id="slide0">
+      <img src="depression.png" class="cinema-slide" alt="depression" id="slide1">
+      <img src="toz1.png" class="cinema-slide" alt="toz1" id="slide2">
+      <img src="lol.png" class="cinema-slide" alt="lol" id="slide3">
+    </div>
+    <button class="cinema-back-btn" onclick="stopCinemaLoop()">
+      🔙 Go back
+    </button>
+  </div>
 
   <div class="balloon-layer" id="balloonLayer"></div>
 
@@ -816,7 +961,7 @@
         name: "Cas",
         role: "Friend",
         img: "cas.png",
-        message: "happy birthday toz, um 16th bday yes happy birthday and ur 1 year closer to death"
+        message: "happy birthday toz, um 16th bday yes happy birthday and ur 1 year closer to death. honestly crazy you survived this long without accidentally doing something stupid, but congrats on making it to 16 i guess. enjoy the back pain and adult problems heading your way soon"
       },
       {
         id: "sweet",
@@ -851,12 +996,58 @@
         name: "Alex",
         role: "Friend",
         img: "alex.png",
-        message: "Happy 16th birthday, toz, hope you have the best day and an even better year ahead. wishing you happiness, success, and good things on the journey to come. even though i've had alot of fights and stuff with you, i still consider you my friend and i apologise for the stuff i've said before and on me being a jackass, anyways again last time, happy birthday toz. And ur 1 year closer to death."
+        message: "Happy 16th birthday Toz! Hope you have the absolute best day and an even better year ahead. 16 is a massive milestone and wishing you nothing but genuine happiness and success and good things on whatever path you take from here. Looking back I know we had our fair share of rough patches stupid fights and unnecessary drama. I genuinely want to apologize for the times I acted like a complete jackass and said things out of line that hurt you. Despite all the dumb moments I still consider you a real friend and I hope this year brings you peace great memories and people who appreciate you. Have an amazing day happy birthday and remember you're officially 1 year closer to death."
       }
     ];
 
     let activeTabId = "cas";
     let candlesBlown = false;
+
+    /* Cinema Loop State */
+    let cinemaInterval = null;
+    let currentSlide = 0;
+    const totalSlides = 4;
+
+    function startCinemaLoop() {
+      // Fire confetti burst on trigger
+      fireConfettiBurst();
+
+      const overlay = document.getElementById('cinemaOverlay');
+      overlay.style.display = 'flex';
+      setTimeout(() => overlay.classList.add('active'), 10);
+
+      currentSlide = 0;
+      showSlide(currentSlide);
+
+      clearInterval(cinemaInterval);
+      // Wait ~3.8s per picture with slow zoom, then switch
+      cinemaInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        showSlide(currentSlide);
+      }, 3800);
+    }
+
+    function showSlide(index) {
+      for (let i = 0; i < totalSlides; i++) {
+        const slide = document.getElementById(`slide${i}`);
+        slide.classList.remove('show');
+      }
+      const activeSlide = document.getElementById(`slide${index}`);
+      void activeSlide.offsetWidth; // re-trigger animation
+      activeSlide.classList.add('show');
+    }
+
+    function stopCinemaLoop() {
+      clearInterval(cinemaInterval);
+      const overlay = document.getElementById('cinemaOverlay');
+      overlay.classList.remove('active');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        for (let i = 0; i < totalSlides; i++) {
+          document.getElementById(`slide${i}`).classList.remove('show');
+        }
+      }, 350);
+    }
 
     function renderTabs() {
       const tabsBar = document.getElementById('tabsBar');
